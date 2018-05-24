@@ -9,6 +9,7 @@ use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
 use Composer\Plugin\Capable;
 use Composer\Plugin\PluginInterface;
 use SAREhub\Plugin\ServiceBuilder\Command\CommandProvider;
+use SAREhub\Plugin\ServiceBuilder\Command\InjectCommandProvider;
 
 class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface, Capable
 {
@@ -39,13 +40,13 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
 
     public function onPreUpdate()
     {
-        $this->io->write("test");
+        $this->io->write("[Service-Builder] Updating using SAREhub Service Builder plugin.");
     }
 
     public function getCapabilities(): array
     {
         return [
-            CommandProviderCapability::class => CommandProvider::class
+            CommandProviderCapability::class => InjectCommandProvider::class
         ];
     }
 }
