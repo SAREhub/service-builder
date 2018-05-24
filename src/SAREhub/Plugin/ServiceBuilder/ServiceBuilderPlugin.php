@@ -3,14 +3,13 @@
 namespace SAREhub\Plugin\ServiceBuilder;
 
 use Composer\Composer;
-use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
 use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
 use Composer\Plugin\Capable;
 use Composer\Plugin\PluginInterface;
 use SAREhub\Plugin\ServiceBuilder\Command\CommandsProvider;
 
-class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface, Capable
+class ServiceBuilderPlugin implements PluginInterface, Capable
 {
     /**
      * @var Composer
