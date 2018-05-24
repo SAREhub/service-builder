@@ -6,6 +6,7 @@ use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
 use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
+use Composer\Plugin\Capability\CommandProvider;
 use Composer\Plugin\Capable;
 use Composer\Plugin\PluginInterface;
 use SAREhub\Plugin\ServiceBuilder\Command\CommandsProvider;
@@ -42,7 +43,7 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
         $this->io->write("[Service-Builder] Updating using SAREhub Service Builder plugin.");
         $this->io->write("enabled capabilities:");
 
-        var_dump($this->composer->getPluginManager()->getPlugins());
+        var_dump($this->composer->getPluginManager()->getPluginCapability($this, CommandProvider::class));
         foreach($this->getCapabilities() as $key => $value) {
             $this->io->write($key." => ".$value);
         }
