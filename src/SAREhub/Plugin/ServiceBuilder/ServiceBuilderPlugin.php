@@ -30,13 +30,22 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
 
     public static function getSubscribedEvents(): array
     {
-        return [];
+        return [
+            "pre-update-cmd" => array(
+                array('onPreUpdate', 0)
+            ),
+        ];
+    }
+
+    public function onPreUpdate()
+    {
+        $this->io->write("test");
     }
 
     public function getCapabilities(): array
     {
         return [
-            'Composer\Plugin\Capability\CommandProvider' => 'SAREhub\Plugin\ServiceBuilder\Command\InjectCommandProvider'
+            CommandProvider::class => InjectCommandProvider::class
         ];
     }
 }
