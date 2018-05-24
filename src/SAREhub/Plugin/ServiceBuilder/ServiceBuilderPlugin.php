@@ -42,8 +42,9 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
         $this->io->write("[Service-Builder] Updating using SAREhub Service Builder plugin.");
         $this->io->write("enabled capabilities:");
 
+        var_dump($this->composer->getPluginManager()->getPlugins());
         foreach($this->getCapabilities() as $key => $value) {
-            $this->io->write($key." => ".trim($value));
+            $this->io->write($key." => ".$value);
         }
     }
 
