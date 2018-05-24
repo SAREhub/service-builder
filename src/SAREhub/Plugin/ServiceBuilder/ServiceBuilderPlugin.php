@@ -8,6 +8,7 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
 use Composer\Plugin\Capable;
 use Composer\Plugin\PluginInterface;
+use SAREhub\Plugin\ServiceBuilder\Command\CommandProvider;
 use SAREhub\Plugin\ServiceBuilder\Command\CommandsProvider;
 
 class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface, Capable
@@ -45,7 +46,8 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
     public function getCapabilities(): array
     {
         return [
-            CommandProviderCapability::class => CommandsProvider::class
+            CommandProviderCapability::class => CommandsProvider::class,
+            'Composer\Plugin\Capability\CommandProvider' => CommandProvider::class,
         ];
     }
 }
