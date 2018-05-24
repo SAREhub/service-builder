@@ -43,7 +43,7 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
         $this->io->write("[Service-Builder] Updating using SAREhub Service Builder plugin.");
     }
 
-    public function getCapabilities(): array
+    public function getCapabilities()
     {
         return [
             CommandProviderCapability::class => CommandsProvider::class,
