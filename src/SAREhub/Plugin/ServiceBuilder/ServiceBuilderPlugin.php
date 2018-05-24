@@ -34,7 +34,15 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
             "pre-update-cmd" => array(
                 array('onPreUpdate', 0)
             ),
+            "init" => array(
+                array('onInit', 0)
+            )
         ];
+    }
+
+    public function onInit()
+    {
+        $this->io->write("initialized");
     }
 
     public function onPreUpdate()
