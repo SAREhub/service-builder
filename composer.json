@@ -1,0 +1,35 @@
+{
+  "name": "sarehub/service-builder",
+  "type": "composer-plugin",
+  "description": "service builder composer plugin",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Jakub Cała",
+      "email": "j.cala@sare.pl"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "6.*",
+    "mockery/mockery": "1.*",
+    "composer/composer": "^1.0.2"
+  },
+  "require": {
+    "php": "^7.0",
+    "composer-plugin-api": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "SAREhub\\": "src/SAREhub"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SAREhub\\": "tests/SAREhub"
+    }
+  },
+  "extra": {
+    "class": "SAREhub\\Plugin\\ServiceBuilder\\ServiceBuilderPlugin"
+  }
+}
