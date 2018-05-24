@@ -4,12 +4,6 @@
   "description": "service builder composer plugin",
   "minimum-stability": "stable",
   "license": "proprietary",
-  "repositories": [
-    {
-      "type": "vcs",
-      "url":  "git@github.com:SAREhub/service-builder.git"
-    }
-  ],
   "authors": [
     {
       "name": "Jakub Cała",
@@ -23,8 +17,7 @@
   },
   "require": {
     "php": "^7.0",
-    "composer-plugin-api": "^1.0",
-    "vendor/service-builder": "dev-master"
+    "composer-plugin-api": "^1.0"
   },
   "autoload": {
     "psr-4": {
