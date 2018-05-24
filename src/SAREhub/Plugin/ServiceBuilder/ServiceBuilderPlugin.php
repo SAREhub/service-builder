@@ -46,8 +46,8 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
     public function getCapabilities()
     {
         return [
-            CommandProviderCapability::class => CommandsProvider::class,
-            'Composer\Plugin\Capability\CommandProvider' => CommandProvider::class,
+            CommandProviderCapability::class => CommandsProvider::class.'aaaa',
+            'Composer\Plugin\Capability\CommandProviderasdfasdfasdf' => CommandProvider::class,
         ];
     }
 }
