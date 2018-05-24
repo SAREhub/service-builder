@@ -33,16 +33,8 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
         return [
             "pre-update-cmd" => array(
                 array('onPreUpdate', 0)
-            ),
-            "init" => array(
-                array('onInit', 0)
             )
         ];
-    }
-
-    public function onInit()
-    {
-        $this->io->write("initialized");
     }
 
     public function onPreUpdate()
@@ -51,7 +43,7 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
         $this->io->write("enabled capabilities:");
 
         foreach($this->getCapabilities() as $key => $value) {
-            $this->io->write($key." => ".$value);
+            $this->io->write($key." => ".trim($value));
         }
     }
 
