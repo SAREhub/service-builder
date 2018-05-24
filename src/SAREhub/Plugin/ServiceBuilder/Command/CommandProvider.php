@@ -2,9 +2,9 @@
 
 namespace SAREhub\Plugin\ServiceBuilder\Command;
 
-use Composer\Plugin\Capability\CommandProvider;
+use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
 
-class InjectCommandProvider implements CommandProvider
+class CommandProvider implements CommandProviderCapability
 {
     public function getCommands(): array
     {
