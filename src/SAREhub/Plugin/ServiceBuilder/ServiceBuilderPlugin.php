@@ -36,7 +36,7 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
     public function getCapabilities(): array
     {
         return [
-            CommandProvider::class => InjectCommandProvider::class
+            'Composer\Plugin\Capability\CommandProvider' => 'SAREhub\Plugin\ServiceBuilder\Command\InjectCommandProvider'
         ];
     }
 }
