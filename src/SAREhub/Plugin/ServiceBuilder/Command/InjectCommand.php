@@ -10,7 +10,6 @@ class InjectCommand extends BaseCommand
 {
     protected function configure()
     {
-        var_dump("asdf");
         $this->setName('inject');
     }
 
