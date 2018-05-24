@@ -5,7 +5,6 @@ namespace SAREhub\Plugin\ServiceBuilder;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
-use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
 use Composer\Plugin\Capable;
 use Composer\Plugin\PluginInterface;
 use SAREhub\Plugin\ServiceBuilder\Command\CommandsProvider;
@@ -46,7 +45,7 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
     public function getCapabilities()
     {
         return [
-            CommandProviderCapability::class => CommandsProvider::class,
+            "Composer\Plugin\Capability\CommandProvider" => CommandsProvider::class,
         ];
     }
 }
