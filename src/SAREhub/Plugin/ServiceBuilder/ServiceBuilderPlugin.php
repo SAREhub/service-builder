@@ -5,7 +5,6 @@ namespace SAREhub\Plugin\ServiceBuilder;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
-use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
 use Composer\Plugin\Capability\CommandProvider;
 use Composer\Plugin\Capable;
 use Composer\Plugin\PluginInterface;
@@ -41,18 +40,12 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
     public function onPreUpdate()
     {
         $this->io->write("[Service-Builder] Updating using SAREhub Service Builder plugin.");
-        $this->io->write("enabled capabilities:");
-
-        var_dump($this->composer->getPluginManager()->getPluginCapability($this, CommandProvider::class));
-        foreach($this->getCapabilities() as $key => $value) {
-            $this->io->write($key." => ".$value);
-        }
     }
 
     public function getCapabilities()
     {
         return [
-            CommandProviderCapability::class => CommandsProvider::class,
+            CommandProvider::class => CommandsProvider::class,
         ];
     }
 }
