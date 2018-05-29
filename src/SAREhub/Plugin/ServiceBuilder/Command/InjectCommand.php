@@ -31,7 +31,6 @@ class InjectCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-//        $factory = new HttpRecipeFactory("https://github.com/myclabs/php-enum", "composer", RecipeConfigFormat::JSON_FORMAT);
         $factory = new HttpRecipeFactory(
             $input->getArgument(self::ARGUMENT_URL),
             $input->getArgument(self::ARGUMENT_CONFIG),
