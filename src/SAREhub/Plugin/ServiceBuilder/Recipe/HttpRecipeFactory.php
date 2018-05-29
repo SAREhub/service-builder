@@ -36,8 +36,7 @@ class HttpRecipeFactory implements RecipeFactory
     public function create(): Recipe
     {
         try {
-            $config = file_get_contents($this->url."/raw/master/".$this->configFile.".".$this->configFormat);
-            var_dump($config);
+            file_get_contents($this->url."/raw/master/".$this->configFile.".".$this->configFormat);
             return new Recipe();
         }
         catch (\Exception $e)
