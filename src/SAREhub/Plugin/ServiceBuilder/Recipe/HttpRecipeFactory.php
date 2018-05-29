@@ -42,7 +42,7 @@ class HttpRecipeFactory implements RecipeFactory
         }
         catch (\Exception $e)
         {
-            throw new RecipeException($e);
+            throw RecipeException::create($e);
         }
     }
 }
