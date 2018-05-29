@@ -44,7 +44,6 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
 
     public function getCapabilities()
     {
-        var_dump("asdf");
         return [
             CommandProvider::class => CommandsProvider::class,
         ];

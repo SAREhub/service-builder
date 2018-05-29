@@ -3,7 +3,6 @@
   "type": "composer-plugin",
   "description": "service builder composer plugin",
   "license": "proprietary",
-  "minimum-stability": "dev",
   "authors": [
     {
       "name": "Jakub Cała",
@@ -17,7 +16,8 @@
   },
   "require": {
     "php": "^7.0",
-    "composer-plugin-api": "^1.1"
+    "composer-plugin-api": "^1.1",
+    "myclabs/php-enum": "1.6.1"
   },
   "autoload": {
     "psr-4": {
