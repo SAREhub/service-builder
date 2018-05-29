@@ -25,6 +25,16 @@ class Recipe
      */
     private $additionalFiles;
 
+    public function createFromArray(array $data): self
+    {
+        $recipe = new Recipe();
+        $recipe->setAdditionalFiles($data["additionalFiles"]);
+        $recipe->setName($data["name"]);
+        $recipe->setNamespace($data["namespace"]);
+        $recipe->setSources($data["sources"]);
+        return $recipe;
+    }
+
     public function getName(): string
     {
         return $this->name;
