@@ -4,7 +4,6 @@ namespace SAREhub\Plugin\ServiceBuilder\Command;
 
 use Composer\Command\BaseCommand;
 use SAREhub\Plugin\ServiceBuilder\Recipe\HttpRecipeFactory;
-use SAREhub\Plugin\ServiceBuilder\Recipe\RecipeConfigFormat;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -23,6 +22,12 @@ class InjectCommand extends BaseCommand
         $this->addArgument(self::ARGUMENT_FORMAT, null, "config file format, available: yml, xml, json");
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     * @throws \SAREhub\Plugin\ServiceBuilder\Recipe\RecipeException
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
