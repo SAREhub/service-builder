@@ -29,10 +29,20 @@ class HttpRecipeFactory implements RecipeFactory
         $this->configFormat = $configFormat;
     }
 
+    /**
+     * @return Recipe
+     * @throws RecipeException
+     */
     public function create(): Recipe
     {
-        $config = file_get_contents($this->url."/raw/master/".$this->configFile.".".$this->configFormat);
-        var_dump($config);
-        return new Recipe();
+        try {
+            $config = file_get_contents($this->url."/raw/master/".$this->configFile.".".$this->configFormat);
+            var_dump($config);
+            return new Recipe();
+        }
+        catch (\Exception $e)
+        {
+            throw new RecipeException($e);
+        }
     }
 }
