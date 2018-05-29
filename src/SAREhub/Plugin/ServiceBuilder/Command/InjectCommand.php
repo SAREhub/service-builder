@@ -11,6 +11,7 @@ class InjectCommand extends BaseCommand
     protected function configure()
     {
         $this->setName('inject');
+        $this->setDescription('Use this command to inject skeleton files to your sources catalog.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

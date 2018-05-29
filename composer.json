@@ -2,8 +2,8 @@
   "name": "sarehub/service-builder",
   "type": "composer-plugin",
   "description": "service builder composer plugin",
-  "minimum-stability": "stable",
   "license": "proprietary",
+  "minimum-stability": "dev",
   "authors": [
     {
       "name": "Jakub Cała",
@@ -13,7 +13,7 @@
   "require-dev": {
     "phpunit/phpunit": "6.*",
     "mockery/mockery": "1.*",
-    "composer/composer": "dev-master"
+    "composer/composer": "^1.2"
   },
   "require": {
     "php": "^7.0",
