@@ -41,7 +41,7 @@ class InjectCommand extends BaseCommand
             $this->registry->getRepository($input->getArgument(self::ARGUMENT_TYPE))
         );
 
-        $recipe = $factory->create($input->getArgument(self::ARGUMENT_REPOSITORY_NAME), $input->getArgument(self::ARGUMENT_NAMESPACE));
-        $output->writeln($recipe->toArray());
+//        $recipe = $factory->create($input->getArgument(self::ARGUMENT_REPOSITORY_NAME), $input->getArgument(self::ARGUMENT_NAMESPACE));
+        $output->writeln("test");
     }
 }
