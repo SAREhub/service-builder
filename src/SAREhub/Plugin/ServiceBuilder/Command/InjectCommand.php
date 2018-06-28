@@ -18,9 +18,9 @@ class InjectCommand extends BaseCommand
     {
         $this->setName('inject');
         $this->setDescription('Inject recipe files from SAREhub database to your sources catalog.');
-//        $this->addArgument(self::ARGUMENT_TYPE, null, "repository type (available: github)");
-//        $this->addArgument(self::ARGUMENT_REPOSITORY_NAME, null, "repository name (example: testGroup/testProject)");
-//        $this->addArgument(self::ARGUMENT_NAMESPACE, null, "namespace where source files should be extracted");
+        $this->addArgument(self::ARGUMENT_TYPE, null, "repository type (available: github)");
+        $this->addArgument(self::ARGUMENT_REPOSITORY_NAME, null, "repository name (example: testGroup/testProject)");
+        $this->addArgument(self::ARGUMENT_NAMESPACE, null, "namespace where source files should be extracted");
     }
 
     /**
