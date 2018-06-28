@@ -37,6 +37,6 @@ class InjectCommand extends BaseCommand
         );
 
         $recipe = $factory->create($input->getArgument(self::ARGUMENT_REPOSITORY_NAME), $input->getArgument(self::ARGUMENT_NAMESPACE));
-        $output->writeln($recipe->toArray());
+        $output->writeln(var_dump($recipe->toArray()));
     }
 }
