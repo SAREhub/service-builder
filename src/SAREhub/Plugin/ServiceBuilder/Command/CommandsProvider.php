@@ -10,10 +10,8 @@ class CommandsProvider implements CommandProvider
 {
     public function getCommands()
     {
-        $repositoryRegistry = new RepositoryRegistry();
-
         return [
-            new InjectCommand($repositoryRegistry)
+            new InjectCommand()
         ];
     }
 }

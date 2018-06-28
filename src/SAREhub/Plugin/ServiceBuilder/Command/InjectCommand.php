@@ -33,7 +33,7 @@ class InjectCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $factory = new HttpRecipeFactory(
-            $this->registry->getRepository($input->getArgument(self::ARGUMENT_TYPE))
+            (new RepositoryRegistry())->getRepository($input->getArgument(self::ARGUMENT_TYPE))
         );
 
         $recipe = $factory->create($input->getArgument(self::ARGUMENT_REPOSITORY_NAME), $input->getArgument(self::ARGUMENT_NAMESPACE));
