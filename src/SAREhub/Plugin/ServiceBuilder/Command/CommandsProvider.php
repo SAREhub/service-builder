@@ -8,20 +8,12 @@ use SAREhub\Plugin\ServiceBuilder\Repository\RepositoryRegistry;
 
 class CommandsProvider implements CommandProvider
 {
-    /**
-     * @var RepositoryRegistry
-     */
-    private $repositoryRegistry;
-
-    public function __construct()
-    {
-        $this->repositoryRegistry = new RepositoryRegistry();
-    }
-
     public function getCommands()
     {
+        $repositoryRegistry = new RepositoryRegistry();
+
         return [
-            new InjectCommand($this->repositoryRegistry)
+            new InjectCommand($repositoryRegistry)
         ];
     }
 }
