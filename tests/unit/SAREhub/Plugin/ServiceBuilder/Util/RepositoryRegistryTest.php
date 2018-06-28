@@ -3,6 +3,9 @@
 namespace SAREhub\Plugin\ServiceBuilder\Util;
 
 use PHPUnit\Framework\TestCase;
+use SAREhub\Plugin\ServiceBuilder\Repository\RepositoryRegistry;
+use SAREhub\Plugin\ServiceBuilder\Repository\RepositoryRegistryException;
+use SAREhub\Plugin\ServiceBuilder\Repository\RepositoryTypes;
 
 class RepositoryRegistryTest extends TestCase
 {

@@ -4,22 +4,28 @@ namespace SAREhub\Plugin\ServiceBuilder\Command;
 
 use Composer\Command\BaseCommand;
 use SAREhub\Plugin\ServiceBuilder\Recipe\HttpRecipeFactory;
+use SAREhub\Plugin\ServiceBuilder\Repository\RepositoryRegistry;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class InjectCommand extends BaseCommand
 {
-    const ARGUMENT_URL = "url";
-    const ARGUMENT_CONFIG = "config";
-    const ARGUMENT_FORMAT = "format";
+    const ARGUMENT_TYPE = "type";
+    const ARGUMENT_REPOSITORY_NAME = "name";
+    const ARGUMENT_NAMESPACE = "namespace";
+
+    /**
+     * @var RepositoryRegistry
+     */
+    private $registry;
 
     protected function configure()
     {
         $this->setName('inject');
         $this->setDescription('Inject recipe files from SAREhub database to your sources catalog.');
-        $this->addArgument(self::ARGUMENT_URL, null, "repository url where the recipe source files are stored.");
-        $this->addArgument(self::ARGUMENT_CONFIG, null, "config file name");
-        $this->addArgument(self::ARGUMENT_FORMAT, null, "config file format, available: yml, xml, json");
+        $this->addArgument(self::ARGUMENT_TYPE, null, "repository type (available: github)");
+        $this->addArgument(self::ARGUMENT_REPOSITORY_NAME, null, "repository name (example: testGroup/testProject)");
+        $this->addArgument(self::ARGUMENT_NAMESPACE, null, "namespace where source files should be extracted");
     }
 
     /**
@@ -27,17 +33,15 @@ class InjectCommand extends BaseCommand
      * @param OutputInterface $output
      * @return int|null|void
      * @throws \SAREhub\Plugin\ServiceBuilder\Recipe\RecipeException
+     * @throws \SAREhub\Plugin\ServiceBuilder\Repository\RepositoryRegistryException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $factory = new HttpRecipeFactory(
-            $input->getArgument(self::ARGUMENT_URL),
-            $input->getArgument(self::ARGUMENT_CONFIG),
-            $input->getArgument(self::ARGUMENT_FORMAT)
+            $this->registry->getRepository($input->getArgument(self::ARGUMENT_TYPE))
         );
 
-        $factory->create();
-        $output->writeln('Executing');
+        $recipe = $factory->create($input->getArgument(self::ARGUMENT_REPOSITORY_NAME), $input->getArgument(self::ARGUMENT_NAMESPACE));
+        $output->writeln($recipe->toArray());
     }
 }

@@ -6,42 +6,46 @@ namespace SAREhub\Plugin\ServiceBuilder\Recipe;
 class HttpRecipeFactory implements RecipeFactory
 {
     /**
-     * URL to recipe repository (at this moment only github).
+     * Repository type name(currently available github only).
      * @var string
      */
-    private $url;
+    private $repositoryUri;
 
-    /**
-     * Config file name(YAML format).
-     * @var string
-     */
-    private $configFile;
-
-    /**
-     * @var string
-     */
-    private $configFormat;
-
-    public function __construct(string $url, string $configFile, string $configFormat)
+    public function __construct(string $repositoryUri)
     {
-        $this->url = $url;
-        $this->configFile = $configFile;
-        $this->configFormat = $configFormat;
+        $this->repositoryUri = $repositoryUri;
     }
 
     /**
+     * @param string $repositoryName
+     * @param string $namespace
      * @return Recipe
      * @throws RecipeException
      */
-    public function create(): Recipe
+    public function create(string $repositoryName, string $namespace): Recipe
     {
         try {
-            file_get_contents($this->url."/raw/master/".$this->configFile.".".$this->configFormat);
-            return new Recipe();
+            $recipeConfig = file_get_contents($this->formatRecipeUri($repositoryName));
+            $decodedConfig = json_decode($recipeConfig, true);
+            $recipe = new Recipe();
+            $recipe->setAdditionalFiles($decodedConfig["additionalFiles"]);
+            $recipe->setNamespace($namespace);
+            return $recipe;
         }
         catch (\Exception $e)
         {
             throw RecipeException::create($e);
         }
     }
+
+    private function formatRecipeUri(string $repositoryName): string
+    {
+        return $this->formatRepositoryUri($repositoryName) . "/raw/master/recipe.json";
+    }
+
+    private function formatRepositoryUri(string $repositoryName): string
+    {
+        return sprintf("%s/%s", $this->repositoryUri, $repositoryName);
+    }
+
 }

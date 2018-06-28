@@ -1,6 +1,6 @@
 <?php
 
-namespace SAREhub\Plugin\ServiceBuilder\Util;
+namespace SAREhub\Plugin\ServiceBuilder\Repository;
 
 
 use Exception;

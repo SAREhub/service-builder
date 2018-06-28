@@ -8,11 +8,6 @@ class Recipe
     /**
      * @var string
      */
-    private $name;
-
-    /**
-     * @var string
-     */
     private $namespace;
 
     /**
@@ -29,20 +24,9 @@ class Recipe
     {
         $recipe = new Recipe();
         $recipe->setAdditionalFiles($data["additionalFiles"]);
-        $recipe->setName($data["name"]);
         $recipe->setNamespace($data["namespace"]);
         $recipe->setSources($data["sources"]);
         return $recipe;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): void
-    {
-        $this->name = $name;
     }
 
     public function getNamespace(): string
@@ -73,6 +57,14 @@ class Recipe
     public function setAdditionalFiles(array $additionalFiles): void
     {
         $this->additionalFiles = $additionalFiles;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            "namespace" => $this->getNamespace(),
+            "additionalFiles" => $this->getAdditionalFiles()
+        ];
     }
 
 }
