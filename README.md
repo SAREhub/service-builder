@@ -1,6 +1,9 @@
 # Service Builder
 SAREhub Service Builder is a composer plugin which allows to inject recipes to projects.
 
+## Status
+This plugin is still under development process.
+
 ## Installation
 Install plugin in global environment by using command described below.
 
