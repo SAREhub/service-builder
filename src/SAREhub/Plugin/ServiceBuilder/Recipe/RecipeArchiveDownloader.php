@@ -42,7 +42,7 @@ class RecipeArchiveDownloader
 
         var_dump(get_class($files));
 
-        File::copyDirRecursively(getcwd()."/".$rootDirectory."src", getcwd()."/".$rootDirectory.$this->recipe->getNamespace()."/src");
+        File::copyDirRecursively(getcwd()."/".$rootDirectory."src", getcwd()."/".$rootDirectory."/src".$this->recipe->getNamespace());
 //        $this->rcopy();
         return $rootDirectory;
     }
