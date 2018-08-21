@@ -18,7 +18,8 @@
     "php": "^7.0",
     "composer-plugin-api": "^1.1",
     "myclabs/php-enum": "1.6.1",
-    "nelexa/zip": "^3.1"
+    "nelexa/zip": "^3.1",
+    "josantonius/file": "^1.1"
   },
   "autoload": {
     "psr-4": {
