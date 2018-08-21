@@ -4,7 +4,7 @@
 namespace SAREhub\Plugin\ServiceBuilder\Recipe;
 
 
-use SAREhub\Plugin\ServiceBuilder\Repository\RepositoryRegistry;
+use PhpZip\ZipFile;
 
 class RecipeArchiveDownloader
 {
@@ -18,10 +18,16 @@ class RecipeArchiveDownloader
         $this->recipe = $recipe;
     }
 
+    /**
+     * @param string $repositoryUri
+     * @throws \PhpZip\Exception\InvalidArgumentException
+     * @throws \PhpZip\Exception\ZipException
+     */
     public function download(string $repositoryUri)
     {
         $file = file_get_contents($this->formatRepositoryArchiveUri($repositoryUri, $this->recipe->getName()));
-        var_dump($file);
+        $zipFile = (new ZipFile())->openFromString($file);
+        var_dump($zipFile->getListFiles());
     }
 
     private function formatRepositoryArchiveUri(string $repositoryUri, string $recipeName): string
