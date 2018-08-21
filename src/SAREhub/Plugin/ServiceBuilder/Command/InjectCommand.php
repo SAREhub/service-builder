@@ -35,6 +35,7 @@ class InjectCommand extends BaseCommand
         if ($input->getArgument(self::ARGUMENT_TYPE) === null || $input->getArgument(self::ARGUMENT_NAMESPACE) === null || $input->getArgument(self::ARGUMENT_REPOSITORY_NAME) === null) {
             $output->writeln("composer inject [type] [name] [namespace]");
             $output->writeln("one or many arguments are missing");
+            return;
         }
 
         $factory = new HttpRecipeFactory((new RepositoryRegistry())->getRepository($input->getArgument(self::ARGUMENT_TYPE)));
