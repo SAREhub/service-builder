@@ -37,8 +37,8 @@ class RecipeArchiveDownloader
             $additionalFiles[$key] = $rootDirectory.$path;
         }
 
-        var_dump($additionalFiles);
         $zipFile->extractTo(getcwd(), $additionalFiles);
+        $zipFile->extractTo(getcwd(), [$rootDirectory."src"]);
     }
 
     private function formatRepositoryArchiveUri(string $repositoryUri, string $recipeName): string
