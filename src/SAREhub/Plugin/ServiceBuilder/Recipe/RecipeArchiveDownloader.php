@@ -37,7 +37,10 @@ class RecipeArchiveDownloader
 
 
         File::copyDirRecursively(getcwd()."/".$rootDirectory."src", getcwd()."/".$rootDirectory."/src/".$this->recipe->getNamespace());
-        File::deleteDirRecursively(getcwd()."/".$rootDirectory."src");
+
+        sleep(2);
+
+        File::deleteDirRecursively(getcwd()."/".$rootDirectory."src/Service");
         return $rootDirectory;
     }
 
