@@ -38,7 +38,7 @@ class RecipeArchiveDownloader
         var_dump(getcwd().$rootDirectory."src");
         var_dump(getcwd().$rootDirectory.$this->recipe->getNamespace()."/src");
 
-        $files = File::getFilesFromDir(getcwd().$rootDirectory."src");
+        $files = File::getFilesFromDir(getcwd()."/".$rootDirectory."src");
 
         var_dump(get_class($files));
 
