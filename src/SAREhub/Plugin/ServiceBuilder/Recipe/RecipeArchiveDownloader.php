@@ -28,6 +28,9 @@ class RecipeArchiveDownloader
         $file = file_get_contents($this->formatRepositoryArchiveUri($repositoryUri, $this->recipe->getName()));
         $zipFile = (new ZipFile())->openFromString($file);
 //        $zipFile->extractTo(getcwd()."/src/".$this->recipe->getNamespace());
+        var_dump($zipFile->getListFiles());
+
+        var_dump($this->recipe->getAdditionalFiles());
         $zipFile->extractTo(getcwd(), $this->recipe->getAdditionalFiles());
     }
 
