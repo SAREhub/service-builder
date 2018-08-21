@@ -28,9 +28,15 @@ class RecipeArchiveDownloader
         $file = file_get_contents($this->formatRepositoryArchiveUri($repositoryUri, $this->recipe->getName()));
         $zipFile = (new ZipFile())->openFromString($file);
 //        $zipFile->extractTo(getcwd()."/src/".$this->recipe->getNamespace());
-        var_dump($zipFile->getListFiles());
-
         $rootDirectory = $zipFile->getListFiles()[0];
+
+        $sourceFiles = [];
+        foreach($zipFile->getListFiles() as $filePath) {
+            if(strpos($filePath, $rootDirectory."src")) {
+                $sourceFiles[] = $filePath;
+            }
+            continue;
+        }
 
         $additionalFiles = $this->recipe->getAdditionalFiles();
         foreach ($additionalFiles as $key=>$path) {
@@ -38,7 +44,7 @@ class RecipeArchiveDownloader
         }
 
         $zipFile->extractTo(getcwd(), $additionalFiles);
-        $zipFile->extractTo(getcwd(), [$rootDirectory."src"]);
+        $zipFile->extractTo(getcwd(), $sourceFiles);
     }
 
     private function formatRepositoryArchiveUri(string $repositoryUri, string $recipeName): string
