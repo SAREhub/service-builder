@@ -32,11 +32,15 @@ class InjectCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $factory = new HttpRecipeFactory(
-            (new RepositoryRegistry())->getRepository($input->getArgument(self::ARGUMENT_TYPE))
-        );
+        if ($input->getArgument(self::ARGUMENT_TYPE) === null || $input->getArgument(self::ARGUMENT_NAMESPACE) === null || $input->getArgument(self::ARGUMENT_REPOSITORY_NAME) === null) {
+            $output->writeln("composer inject [type] [name] [namespace]");
+            $output->writeln("one or many arguments are missing");
+        }
 
-        $recipe = $factory->create($input->getArgument(self::ARGUMENT_REPOSITORY_NAME), $input->getArgument(self::ARGUMENT_NAMESPACE));
+        $factory = new HttpRecipeFactory((new RepositoryRegistry())->getRepository($input->getArgument(self::ARGUMENT_TYPE)));
+
+        $recipe = $factory->create($input->getArgument(self::ARGUMENT_REPOSITORY_NAME),
+            $input->getArgument(self::ARGUMENT_NAMESPACE));
         $output->writeln(var_dump($recipe->toArray()));
     }
 }
