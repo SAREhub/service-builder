@@ -33,6 +33,9 @@ class RecipeArchiveDownloader
 
         $zipFile->extractTo(getcwd(), $this->getAdditionalFilesFromArchive($rootDirectory));
         $zipFile->extractTo(getcwd(), $this->getSourceFilesFromArchive($zipFile, $rootDirectory));
+
+        var_dump(getcwd().$rootDirectory."src");
+        var_dump(getcwd().$rootDirectory.$this->recipe->getNamespace()."/src");
         $this->rcopy(getcwd().$rootDirectory."src", getcwd().$rootDirectory.$this->recipe->getNamespace()."/src");
         return $rootDirectory;
     }
