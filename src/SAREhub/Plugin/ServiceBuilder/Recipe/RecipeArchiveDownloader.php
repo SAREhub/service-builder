@@ -5,6 +5,7 @@ namespace SAREhub\Plugin\ServiceBuilder\Recipe;
 
 
 use PhpZip\ZipFile;
+use PhpZip\ZipFileInterface;
 
 class RecipeArchiveDownloader
 {
@@ -22,33 +23,42 @@ class RecipeArchiveDownloader
      * @param string $repositoryUri
      * @throws \PhpZip\Exception\InvalidArgumentException
      * @throws \PhpZip\Exception\ZipException
+     * @return string Root directory of created project
      */
-    public function download(string $repositoryUri)
+    public function download(string $repositoryUri): string
     {
         $file = file_get_contents($this->formatRepositoryArchiveUri($repositoryUri, $this->recipe->getName()));
         $zipFile = (new ZipFile())->openFromString($file);
-//        $zipFile->extractTo(getcwd()."/src/".$this->recipe->getNamespace());
         $rootDirectory = $zipFile->getListFiles()[0];
 
-        $sourceFiles = [];
-        foreach($zipFile->getListFiles() as $filePath) {
-            if(strpos($filePath, $rootDirectory."src")) {
-                $sourceFiles[] = $filePath;
-            }
-            continue;
-        }
-
-        $additionalFiles = $this->recipe->getAdditionalFiles();
-        foreach ($additionalFiles as $key=>$path) {
-            $additionalFiles[$key] = $rootDirectory.$path;
-        }
-
-        $zipFile->extractTo(getcwd(), $additionalFiles);
-        $zipFile->extractTo(getcwd(), $sourceFiles);
+        $zipFile->extractTo(getcwd(), $this->getAdditionalFilesFromArchive($rootDirectory));
+        $zipFile->extractTo(getcwd(), $this->getSourceFilesFromArchive($zipFile, $rootDirectory));
+        return $rootDirectory;
     }
 
     private function formatRepositoryArchiveUri(string $repositoryUri, string $recipeName): string
     {
         return sprintf("%s/%s/archive/master.zip", $repositoryUri, $recipeName);
+    }
+
+    private function getAdditionalFilesFromArchive($rootDirectory): array
+    {
+        $additionalFiles = $this->recipe->getAdditionalFiles();
+        foreach ($additionalFiles as $key => $path) {
+            $additionalFiles[$key] = $rootDirectory . $path;
+        }
+        return $additionalFiles;
+    }
+
+    private function getSourceFilesFromArchive(ZipFileInterface $zipFile, $rootDirectory): array
+    {
+        $sourceFiles = [];
+        foreach ($zipFile->getListFiles() as $filePath) {
+            if (strpos($filePath, $rootDirectory . "src")) {
+                $sourceFiles[] = $filePath;
+            }
+            continue;
+        }
+        return $sourceFiles;
     }
 }

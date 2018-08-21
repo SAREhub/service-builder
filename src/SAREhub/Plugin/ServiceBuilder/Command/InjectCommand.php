@@ -45,15 +45,14 @@ class InjectCommand extends BaseCommand
         $factory = new HttpRecipeFactory($repositoryUri);
 
         $this->writeServiceBuilderMessage($output,"Obtaining data about recipe");
-
-        $recipe = $factory->create($input->getArgument(self::ARGUMENT_REPOSITORY_NAME),
-            $input->getArgument(self::ARGUMENT_NAMESPACE));
+        $recipe = $factory->create(
+            $input->getArgument(self::ARGUMENT_REPOSITORY_NAME),
+            $input->getArgument(self::ARGUMENT_NAMESPACE)
+        );
 
         $this->writeServiceBuilderMessage($output, "Downloading files from recipe");
-
         $downloader = new RecipeArchiveDownloader($recipe);
         $downloader->download($repositoryUri);
-
         $this->writeServiceBuilderMessage($output, "Downloading files finished. Check your directory and files inside");
     }
 
