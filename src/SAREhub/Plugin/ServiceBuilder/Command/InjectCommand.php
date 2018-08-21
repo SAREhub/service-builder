@@ -4,6 +4,7 @@ namespace SAREhub\Plugin\ServiceBuilder\Command;
 
 use Composer\Command\BaseCommand;
 use SAREhub\Plugin\ServiceBuilder\Recipe\HttpRecipeFactory;
+use SAREhub\Plugin\ServiceBuilder\Recipe\RecipeArchiveDownloader;
 use SAREhub\Plugin\ServiceBuilder\Repository\RepositoryRegistry;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,10 +39,13 @@ class InjectCommand extends BaseCommand
             return;
         }
 
-        $factory = new HttpRecipeFactory((new RepositoryRegistry())->getRepository($input->getArgument(self::ARGUMENT_TYPE)));
+        $repositoryUri = (new RepositoryRegistry())->getRepository($input->getArgument(self::ARGUMENT_TYPE));
+        $factory = new HttpRecipeFactory($repositoryUri);
 
         $recipe = $factory->create($input->getArgument(self::ARGUMENT_REPOSITORY_NAME),
             $input->getArgument(self::ARGUMENT_NAMESPACE));
-        $output->writeln(var_dump($recipe->toArray()));
+
+        $downloader = new RecipeArchiveDownloader($recipe);
+        $downloader->download($repositoryUri);
     }
 }

@@ -28,6 +28,7 @@ class HttpRecipeFactory implements RecipeFactory
             $recipeConfig = file_get_contents($this->formatRecipeUri($repositoryName));
             $decodedConfig = json_decode($recipeConfig, true);
             $recipe = new Recipe();
+            $recipe->setName($repositoryName);
             $recipe->setAdditionalFiles($decodedConfig["additionalFiles"]);
             $recipe->setNamespace($namespace);
             return $recipe;

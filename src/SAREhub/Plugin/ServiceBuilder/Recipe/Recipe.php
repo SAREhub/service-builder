@@ -8,6 +8,11 @@ class Recipe
     /**
      * @var string
      */
+    private $name;
+
+    /**
+     * @var string
+     */
     private $namespace;
 
     /**
@@ -23,10 +28,21 @@ class Recipe
     public function createFromArray(array $data): self
     {
         $recipe = new Recipe();
+        $recipe->setName($data["name"]);
         $recipe->setAdditionalFiles($data["additionalFiles"]);
         $recipe->setNamespace($data["namespace"]);
         $recipe->setSources($data["sources"]);
         return $recipe;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
     }
 
     public function getNamespace(): string
