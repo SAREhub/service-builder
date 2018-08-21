@@ -34,4 +34,9 @@ class ServiceBuilderPlugin implements PluginInterface, EventSubscriberInterface,
             CommandProvider::class => CommandsProvider::class,
         ];
     }
+
+    public static function getSubscribedEvents()
+    {
+        return [];
+    }
 }
