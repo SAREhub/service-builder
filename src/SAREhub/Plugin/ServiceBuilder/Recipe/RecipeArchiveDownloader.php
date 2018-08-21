@@ -33,6 +33,7 @@ class RecipeArchiveDownloader
 
         $zipFile->extractTo(getcwd(), $this->getAdditionalFilesFromArchive($rootDirectory));
         $zipFile->extractTo(getcwd(), $this->getSourceFilesFromArchive($zipFile, $rootDirectory));
+        $this->rcopy($rootDirectory."src", $rootDirectory.$this->recipe->getNamespace()."/src");
         return $rootDirectory;
     }
 
@@ -60,5 +61,28 @@ class RecipeArchiveDownloader
             continue;
         }
         return $sourceFiles;
+    }
+
+    private function rrmdir($dir) {
+        if (is_dir($dir)) {
+            $files = scandir($dir);
+            foreach ($files as $file)
+                if ($file != "." && $file != "..") $this->rrmdir("$dir/$file");
+            rmdir($dir);
+        }
+        else if (file_exists($dir)) unlink($dir);
+    }
+
+    private function rcopy($src, $dst) {
+        if (file_exists ( $dst ))
+            $this->rrmdir ( $dst );
+        if (is_dir ( $src )) {
+            mkdir ( $dst );
+            $files = scandir ( $src );
+            foreach ( $files as $file )
+                if ($file != "." && $file != "..")
+                    $this->rcopy ( "$src/$file", "$dst/$file" );
+        } else if (file_exists ( $src ))
+            copy ( $src, $dst );
     }
 }
