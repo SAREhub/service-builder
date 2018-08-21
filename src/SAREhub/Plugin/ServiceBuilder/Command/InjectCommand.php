@@ -28,6 +28,8 @@ class InjectCommand extends BaseCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int|null|void
+     * @throws \PhpZip\Exception\InvalidArgumentException
+     * @throws \PhpZip\Exception\ZipException
      * @throws \SAREhub\Plugin\ServiceBuilder\Recipe\RecipeException
      * @throws \SAREhub\Plugin\ServiceBuilder\Repository\RepositoryRegistryException
      */
@@ -42,10 +44,21 @@ class InjectCommand extends BaseCommand
         $repositoryUri = (new RepositoryRegistry())->getRepository($input->getArgument(self::ARGUMENT_TYPE));
         $factory = new HttpRecipeFactory($repositoryUri);
 
+        $this->writeServiceBuilderMessage($output,"Obtaining data about recipe");
+
         $recipe = $factory->create($input->getArgument(self::ARGUMENT_REPOSITORY_NAME),
             $input->getArgument(self::ARGUMENT_NAMESPACE));
 
+        $this->writeServiceBuilderMessage($output, "Downloading files from recipe");
+
         $downloader = new RecipeArchiveDownloader($recipe);
         $downloader->download($repositoryUri);
+
+        $this->writeServiceBuilderMessage($output, "Downloading files finished. Check your directory and files inside");
+    }
+
+    private function writeServiceBuilderMessage(OutputInterface$output, string $message)
+    {
+        $output->writeln(sprintf("[Service-Builder] %s.", $message));
     }
 }
