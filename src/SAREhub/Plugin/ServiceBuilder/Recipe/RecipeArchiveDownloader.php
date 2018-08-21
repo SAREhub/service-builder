@@ -30,8 +30,15 @@ class RecipeArchiveDownloader
 //        $zipFile->extractTo(getcwd()."/src/".$this->recipe->getNamespace());
         var_dump($zipFile->getListFiles());
 
-        var_dump($this->recipe->getAdditionalFiles());
-        $zipFile->extractTo(getcwd(), $this->recipe->getAdditionalFiles());
+        $rootDirectory = $zipFile->getListFiles()[0];
+
+        $additionalFiles = $this->recipe->getAdditionalFiles();
+        foreach ($additionalFiles as $key=>$path) {
+            $additionalFiles[$key] = $rootDirectory.$path;
+        }
+
+        var_dump($additionalFiles);
+        $zipFile->extractTo(getcwd(), $additionalFiles);
     }
 
     private function formatRepositoryArchiveUri(string $repositoryUri, string $recipeName): string
