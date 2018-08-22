@@ -40,6 +40,9 @@ class RecipeArchiveDownloader
         File::deleteDirRecursively(getcwd()."/".$rootDirectory."src");
         File::copyDirRecursively(getcwd()."/".$rootDirectory."src2", getcwd()."/".$rootDirectory."/src");
         File::deleteDirRecursively(getcwd()."/".$rootDirectory."src2");
+
+        File::copyDirRecursively(getcwd()."/".$rootDirectory, getcwd());
+        File::deleteDirRecursively(getcwd()."/".$rootDirectory);
         return $rootDirectory;
     }
 
