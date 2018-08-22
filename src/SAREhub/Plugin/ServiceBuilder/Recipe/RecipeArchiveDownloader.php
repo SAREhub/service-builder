@@ -35,14 +35,16 @@ class RecipeArchiveDownloader
         $zipFile->extractTo(getcwd(), $this->getAdditionalFilesFromArchive($rootDirectory));
         $zipFile->extractTo(getcwd(), $this->getSourceFilesFromArchive($zipFile, $rootDirectory));
 
+        $workingDirRootDirectory = getcwd() . "/" . $rootDirectory;
 
-        File::copyDirRecursively(getcwd()."/".$rootDirectory."src", getcwd()."/".$rootDirectory."/src2/".$this->recipe->getNamespace());
-        File::deleteDirRecursively(getcwd()."/".$rootDirectory."src");
-        File::copyDirRecursively(getcwd()."/".$rootDirectory."src2", getcwd()."/".$rootDirectory."/src");
-        File::deleteDirRecursively(getcwd()."/".$rootDirectory."src2");
+        File::copyDirRecursively($workingDirRootDirectory ."src", $workingDirRootDirectory ."/src2/".$this->recipe->getNamespace());
+        File::deleteDirRecursively($workingDirRootDirectory ."src");
 
-        File::copyDirRecursively(getcwd()."/".$rootDirectory, getcwd());
-        File::deleteDirRecursively(getcwd()."/".$rootDirectory);
+        File::copyDirRecursively($workingDirRootDirectory ."src2", $workingDirRootDirectory ."/src");
+        File::deleteDirRecursively($workingDirRootDirectory ."src2");
+
+        File::copyDirRecursively($workingDirRootDirectory, getcwd());
+        File::deleteDirRecursively($workingDirRootDirectory);
         return $rootDirectory;
     }
 
