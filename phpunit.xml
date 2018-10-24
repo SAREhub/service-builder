@@ -11,10 +11,6 @@
          stopOnFailure="false"
          syntaxCheck="false"
 >
-    <php>
-        <env name="TEST_API_PORT" value="10020"/>
-        <env name="TEST_API_ROOT_PASSWORD" value="test"/>
-    </php>
     <testsuites>
         <testsuite name="functional">
             <directory suffix="Test.php">./tests/functional/</directory>
