@@ -6,5 +6,5 @@ namespace SAREhub\Plugin\ServiceBuilder\Recipe\Inject;
 
 interface InjectStepFactory
 {
-    public function create(array $data): InjectStep;
+    public function create(array $parameters): InjectStep;
 }

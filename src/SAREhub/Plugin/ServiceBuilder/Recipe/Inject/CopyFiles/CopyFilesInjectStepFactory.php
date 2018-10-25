@@ -8,8 +8,24 @@ use SAREhub\Plugin\ServiceBuilder\Recipe\Inject\InjectStepFactory;
 
 class CopyFilesInjectStepFactory implements InjectStepFactory
 {
-    public function create(array $data): InjectStep
+    /**
+     * @var string
+     */
+    private $srcRootDir;
+
+    /**
+     * @var string
+     */
+    private $distRootDir;
+
+    public function __construct(string $srcRootDir, string $distRootDir)
     {
-        return new CopyFilesInjectStep($data["filesToCopy"], $data["srcRootDir"], $data["distRootDir"]);
+        $this->srcRootDir = $srcRootDir;
+        $this->distRootDir = $distRootDir;
+    }
+
+    public function create(array $parameters): InjectStep
+    {
+        return new CopyFilesInjectStep($parameters["filesToCopy"], $this->srcRootDir, $this->distRootDir);
     }
 }
