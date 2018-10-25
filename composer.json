@@ -12,10 +12,12 @@
   "require-dev": {
     "phpunit/phpunit": "6.*",
     "mockery/mockery": "1.*",
+    "mikey179/vfsStream": "1.6.*",
     "composer/composer": "^1.2"
   },
   "require": {
-    "php": "^7.0",
+    "php": "^7.1",
+    "ext-json": "",
     "composer-plugin-api": "^1.1",
     "myclabs/php-enum": "1.6.1",
     "nelexa/zip": "^3.1",
