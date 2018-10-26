@@ -3,61 +3,77 @@
 namespace SAREhub\Plugin\ServiceBuilder\Command;
 
 use Composer\Command\BaseCommand;
-use SAREhub\Plugin\ServiceBuilder\Recipe\HttpRecipeFactory;
-use SAREhub\Plugin\ServiceBuilder\Recipe\RecipeArchiveDownloader;
-use SAREhub\Plugin\ServiceBuilder\Repository\RepositoryRegistry;
+use FilesystemIterator;
+use Josantonius\File\File;
+use SAREhub\Plugin\ServiceBuilder\Recipe\RecipeManifest;
+use SAREhub\Plugin\ServiceBuilder\Recipe\RecipeManifestLoaderFactory;
+use SAREhub\Plugin\ServiceBuilder\Util\ArchiveDownloader;
+use SAREhub\Plugin\ServiceBuilder\Util\Task\CopyFiles\CopyFilesTaskFactory;
+use SAREhub\Plugin\ServiceBuilder\Util\Task\TaskParser;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class InjectCommand extends BaseCommand
 {
-    const ARGUMENT_TYPE = "type";
-    const ARGUMENT_REPOSITORY_NAME = "name";
-    const ARGUMENT_NAMESPACE = "namespace";
+    const TMP_RECIPES_DIR = "__tmprecipes";
+
+    const ARG_RECIPE_MANIFEST_URI = "recipeManifestUri";
 
     protected function configure()
     {
         $this->setName('inject');
-        $this->setDescription('Inject recipe files from SAREhub database to your sources catalog.');
-        $this->addArgument(self::ARGUMENT_TYPE, null, "repository type (available: github)");
-        $this->addArgument(self::ARGUMENT_REPOSITORY_NAME, null, "repository name (example: testGroup/testProject)");
-        $this->addArgument(self::ARGUMENT_NAMESPACE, null, "namespace where source files should be extracted");
+        $this->setDescription('Inject recipe to current project');
+        $this->addArgument(self::ARG_RECIPE_MANIFEST_URI, InputArgument::REQUIRED, "uri for recipe.json file");
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int|null|void
-     * @throws \PhpZip\Exception\InvalidArgumentException
-     * @throws \PhpZip\Exception\ZipException
-     * @throws \SAREhub\Plugin\ServiceBuilder\Recipe\RecipeException
-     * @throws \SAREhub\Plugin\ServiceBuilder\Repository\RepositoryRegistryException
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getArgument(self::ARGUMENT_TYPE) === null || $input->getArgument(self::ARGUMENT_NAMESPACE) === null || $input->getArgument(self::ARGUMENT_REPOSITORY_NAME) === null) {
-            $output->writeln("composer inject [type] [name] [namespace]");
-            $output->writeln("one or many arguments are missing");
-            return;
-        }
+        $consoleOutput =  new SymfonyStyle($input, $output);
+        $consoleOutput->title("Service Builder");
 
-        $repositoryUri = (new RepositoryRegistry())->getRepository($input->getArgument(self::ARGUMENT_TYPE));
-        $factory = new HttpRecipeFactory($repositoryUri);
+        $manifest = $this->loadManifest($input, $consoleOutput);
 
-        $this->writeServiceBuilderMessage($output,"Obtaining data about recipe");
-        $recipe = $factory->create(
-            $input->getArgument(self::ARGUMENT_REPOSITORY_NAME),
-            $input->getArgument(self::ARGUMENT_NAMESPACE)
-        );
+        $tmpRecipesDir = getcwd() . "/" . self::TMP_RECIPES_DIR;
+        $extractedRecipeArchiveDir = $this->downloadRecipeArchive($manifest, $tmpRecipesDir, $consoleOutput);
 
-        $this->writeServiceBuilderMessage($output, "Downloading files from recipe");
-        $downloader = new RecipeArchiveDownloader($recipe);
-        $downloader->download($repositoryUri);
-        $this->writeServiceBuilderMessage($output, "Downloading files finished. Check your directory and files inside");
+        $this->runInjectTasks($manifest, $extractedRecipeArchiveDir, $consoleOutput);
+
+        File::deleteDirRecursively($tmpRecipesDir);
+        $consoleOutput->success("Recipe injected to project");
     }
 
-    private function writeServiceBuilderMessage(OutputInterface$output, string $message)
+    private function loadManifest(InputInterface $input, SymfonyStyle $output): RecipeManifest
     {
-        $output->writeln(sprintf("[Service-Builder] %s.", $message));
+        $output->writeln("Loading recipe manifest...");
+        $manifestUri = $input->getArgument(self::ARG_RECIPE_MANIFEST_URI);
+        $manifestLoaderFactory = new RecipeManifestLoaderFactory();
+        $manifestLoader = $manifestLoaderFactory->create($manifestUri);
+        $manifest = $manifestLoader->load();
+        return $manifest;
+    }
+
+    private function downloadRecipeArchive(RecipeManifest $manifest, string $tmpRecipesDir, SymfonyStyle $output): string
+    {
+        $output->writeln("Creating recipe archive tmp dir...");
+        $recipeTmpDir = $tmpRecipesDir . "/" . $manifest->getName();
+        @mkdir($recipeTmpDir, 0777, true);
+
+        $output->writeln("Downloading recipe archive...");
+        $archiveDownloader = new ArchiveDownloader();
+        $archiveDownloader->download($manifest->getArchiveUri() . "?" . time(), $recipeTmpDir);
+
+        $files = iterator_to_array(new FilesystemIterator($recipeTmpDir, FilesystemIterator::SKIP_DOTS));
+        return $recipeTmpDir . ((count($files) === 1) ? "/" . current($files)->getFilename() : "");
+    }
+
+    private function runInjectTasks(RecipeManifest $manifest, string $extractedRecipeArchiveDir, SymfonyStyle $output): void
+    {
+        $parser = new TaskParser();
+        $parser->addFactory("CopyFiles", new CopyFilesTaskFactory($extractedRecipeArchiveDir . "", getcwd()));
+        $task = $parser->parse($manifest->getInjectTasks());
+        $task->run();
+        $output->writeln("Executed recipe injectTasks...");
     }
 }

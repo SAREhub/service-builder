@@ -5,46 +5,91 @@ SAREhub Service Builder is a composer plugin which allows to inject recipes to p
 This plugin is still under development process.
 
 ## Installation
-Install plugin in global environment by using command described below.
+Install plugin globally by using:
 
 ```
 composer global require sarehub/service-builder
 ```
 
-## How to use it?
-Use **inject** command inside terminal.
+## Commands:
 
-### Example usage:
+### inject
+Injecting recipe to project
 
-``` 
-    composer inject github SAREhub/service-builder-recipe Project/Namespace
+Usage:
+
+For Github repository:
+```
+    composer inject github:<account>/<repository>
 ```
 
-This command should extract source files to _src/Project/Namespace_ directory in your working dir.
-
-Additional files from recipe will be extracted in directories where have been placed before. In this case 
-this will be _bin/init.sh_ folder in your working dir.
+For Http or Https repository:
+```
+    composer inject <http|https>:domain.com/recipe.json
+```
 
 ## Creating own recipe
-At this moment Service Builder handle only github repositories. To make new recipe you should 
-create repository on github.
 
-After creating repository with files which are needed to be inside recipe you should add
-*Recipe Entrypoint*.
+### Recipe manifest
+Recipe manifest is a configuration file
+which allows you to execute some tasks like copy template files.
+Recipe manifest file my be named **recipe.json**.
 
-### Recipe Entrypoint
-Recipe Entrypoint is a configuration file which allows you to add additional files to
- recipe. Main files are stored inside **src** directory. Entrypoint has to be named 
- **recipe.json**.
- 
-Recipe Entrypoint structure:
+Structure:
 ```json
 {
-  "additionalFiles": [
-    "path/to/additional/file.extension"
-  ]
+    "name": "<recipe_name>",
+    "archiveUri": "<uriToRecipeArchive>",
+    "injectTasks": [
+        {
+            "type": "<task_type>",
+            "parameters": {
+                "task_param": ""
+            }
+        }
+    ]
 }
 ```
 
-### Example recipe
-<a href="https://github.com/SAREhub/service-builder-recipe">Click here to redirect to example Service Builder recipe.</a>
+#### Supported Inject task types:
+
+**CopyFiles** - copies selected files/directories from recipe archive
+    to selected paths in project directory.
+
+Parameters:
+   - files - json object with files to copy
+
+Example
+```json
+{
+    "type": "CopyFiles",
+    "parameters": {
+        "files" : {
+         "file.txt": "bin/file.txt",
+         "src": "",
+         "some_files/": ""
+        }
+    }
+}
+```
+
+## Development
+
+### Testing
+Create local folder with composer.json
+
+```json
+{
+    "name": "sarehub/test",
+    "type": "project",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../service-builder"
+        }
+    ],
+    "require": {
+        "sarehub/service-builder": "@dev"
+    }
+}
+```
