@@ -9,6 +9,9 @@ use SAREhub\Plugin\ServiceBuilder\Util\Task\TaskFactory;
 
 class CopyFilesTaskFactory implements TaskFactory
 {
+
+    const PARAM_FILES = "files";
+
     /**
      * @var string
      */
@@ -27,6 +30,6 @@ class CopyFilesTaskFactory implements TaskFactory
 
     public function create(array $parameters): Task
     {
-        return new CopyFilesTask($parameters["filesToCopy"], $this->srcRootDir, $this->distRootDir);
+        return new CopyFilesTask($parameters[self::PARAM_FILES], $this->srcRootDir, $this->distRootDir);
     }
 }
