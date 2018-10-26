@@ -7,6 +7,10 @@
     {
       "name": "Jakub Cała",
       "email": "j.cala@sare.pl"
+    },
+    {
+      "name": "Andrzej Wasiak",
+      "email": "mararok@gmail.com"
     }
   ],
   "require-dev": {
@@ -17,11 +21,10 @@
   },
   "require": {
     "php": "^7.1",
-    "ext-json": "",
     "composer-plugin-api": "^1.1",
-    "myclabs/php-enum": "1.6.1",
     "nelexa/zip": "^3.1",
-    "josantonius/file": "^1.1"
+    "josantonius/file": "^1.1",
+    "sarehub/commons": "^0.7.16"
   },
   "autoload": {
     "psr-4": {
