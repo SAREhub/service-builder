@@ -72,3 +72,24 @@ Example
     }
 }
 ```
+
+## Development
+
+### Testing
+Create local folder with composer.json
+
+```json
+{
+    "name": "sarehub/test",
+    "type": "project",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../service-builder"
+        }
+    ],
+    "require": {
+        "sarehub/service-builder": "@dev"
+    }
+}
+```
