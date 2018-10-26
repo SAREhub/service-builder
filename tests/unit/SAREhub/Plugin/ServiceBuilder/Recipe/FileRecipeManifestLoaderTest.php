@@ -27,6 +27,8 @@ class FileRecipeManifestLoaderTest extends TestCase
     public function testLoad()
     {
         $content = [
+            "name" => "test_recipe",
+            "archiveUri" => "https://example.com/archive.zip",
             "injectSteps" => [
                 ["step_info"]
             ]
@@ -35,6 +37,8 @@ class FileRecipeManifestLoaderTest extends TestCase
         $this->vfsRoot->addChild($file);
         $manifest = $this->loader->load($file->url());
 
+        $this->assertEquals($content["name"], $manifest->getName());
+        $this->assertEquals($content["archiveUri"], $manifest->getArchiveUri());
         $this->assertEquals($content["injectSteps"], $manifest->getInjectSteps());
     }
 }

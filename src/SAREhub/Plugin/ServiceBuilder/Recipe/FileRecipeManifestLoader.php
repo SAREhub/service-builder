@@ -10,6 +10,8 @@ class FileRecipeManifestLoader
     {
         $manifest = new RecipeManifest();
         $data = json_decode(file_get_contents($uri), true);
+        $manifest->setName($data["name"]);
+        $manifest->setArchiveUri($data["archiveUri"]);
         $manifest->setInjectSteps($data["injectSteps"]);
         return $manifest;
     }
