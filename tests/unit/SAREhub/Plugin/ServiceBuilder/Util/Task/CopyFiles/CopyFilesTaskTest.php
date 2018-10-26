@@ -1,15 +1,15 @@
 <?php
 
-namespace SAREhub\Plugin\ServiceBuilder\Recipe\Inject\CopyFiles;
+namespace SAREhub\Plugin\ServiceBuilder\Util\Task\CopyFiles;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 
-class CopyFilesInjectStepTest extends TestCase
+class CopyFilesTaskTest extends TestCase
 {
 
-    public function testInjectWhenFileIsNotNestedThenIsCopied()
+    public function testRunWhenFileIsNotNestedThenIsCopied()
     {
         $filesToCopy = [
             "test.txt" => "copied.txt"
@@ -21,14 +21,14 @@ class CopyFilesInjectStepTest extends TestCase
             "test_dest" => []
         ]);
         $rootDir = $vfsRoot->url();
-        $injectStep = new CopyFilesInjectStep($filesToCopy, $rootDir . "/test_src", $rootDir . "/test_dest");
+        $injectStep = new CopyFilesTask($filesToCopy, $rootDir . "/test_src", $rootDir . "/test_dest");
 
-        $injectStep->inject();
+        $injectStep->run();
 
         $this->assertFile("abc", "root/test_dest/copied.txt", $vfsRoot);
     }
 
-    public function testInjectWhenFileIsNestedThenIsCopied()
+    public function testRunWhenFileIsNestedThenIsCopied()
     {
         $filesToCopy = [
             "dir/test.txt" => "copied/copied.txt"
@@ -42,14 +42,14 @@ class CopyFilesInjectStepTest extends TestCase
             "test_dest" => []
         ]);
         $rootDir = $vfsRoot->url();
-        $injectStep = new CopyFilesInjectStep($filesToCopy, $rootDir . "/test_src", $rootDir . "/test_dest");
+        $injectStep = new CopyFilesTask($filesToCopy, $rootDir . "/test_src", $rootDir . "/test_dest");
 
-        $injectStep->inject();
+        $injectStep->run();
 
         $this->assertFile("abc", "root/test_dest/copied/copied.txt", $vfsRoot);
     }
 
-    public function testInjectWhenSrcFileIsDirAndNotEndingWithSlashThenCopyRecursive()
+    public function testRunWhenSrcFileIsDirAndNotEndingWithSlashThenCopyRecursive()
     {
         $filesToCopy = [
             "dir" => "copied"
@@ -66,15 +66,15 @@ class CopyFilesInjectStepTest extends TestCase
             "test_dest" => []
         ]);
         $rootDir = $vfsRoot->url();
-        $injectStep = new CopyFilesInjectStep($filesToCopy, $rootDir . "/test_src", $rootDir . "/test_dest");
+        $injectStep = new CopyFilesTask($filesToCopy, $rootDir . "/test_src", $rootDir . "/test_dest");
 
-        $injectStep->inject();
+        $injectStep->run();
 
         $this->assertFile("abc1", "root/test_dest/copied/dir/test1.txt", $vfsRoot);
         $this->assertFile("abc2", "root/test_dest/copied/dir/nested/test2.txt", $vfsRoot);
     }
 
-    public function testInjectWhenSrcFileIsDirAndEndingWithSlashThenCopyRecursive()
+    public function testRunWhenSrcFileIsDirAndEndingWithSlashThenCopyRecursive()
     {
         $filesToCopy = [
             "dir/" => "copied"
@@ -91,9 +91,9 @@ class CopyFilesInjectStepTest extends TestCase
             "test_dest" => []
         ]);
         $rootDir = $vfsRoot->url();
-        $injectStep = new CopyFilesInjectStep($filesToCopy, $rootDir . "/test_src", $rootDir . "/test_dest");
+        $injectStep = new CopyFilesTask($filesToCopy, $rootDir . "/test_src", $rootDir . "/test_dest");
 
-        $injectStep->inject();
+        $injectStep->run();
 
         $this->assertFile("abc1", "root/test_dest/copied/test1.txt", $vfsRoot);
         $this->assertFile("abc2", "root/test_dest/copied/nested/test2.txt", $vfsRoot);

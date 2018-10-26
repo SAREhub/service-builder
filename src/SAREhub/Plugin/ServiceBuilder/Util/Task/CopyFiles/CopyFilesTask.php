@@ -1,14 +1,14 @@
 <?php
 
 
-namespace SAREhub\Plugin\ServiceBuilder\Recipe\Inject\CopyFiles;
+namespace SAREhub\Plugin\ServiceBuilder\Util\Task\CopyFiles;
 
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use SAREhub\Plugin\ServiceBuilder\Recipe\Inject\InjectStep;
+use SAREhub\Commons\Task\Task;
 
-class CopyFilesInjectStep implements InjectStep
+class CopyFilesTask implements Task
 {
     /**
      * @var array
@@ -32,7 +32,7 @@ class CopyFilesInjectStep implements InjectStep
         $this->destRootDir = $destRootDir;
     }
 
-    public function inject()
+    public function run()
     {
         foreach ($this->filesToCopy as $srcFile => $destFile) {
             $srcFilePath = $this->srcRootDir . "/" . $srcFile;

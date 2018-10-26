@@ -19,7 +19,7 @@ class RecipeManifest
     /**
      * @var array
      */
-    private $injectSteps;
+    private $injectTasks;
 
     public function getName(): string
     {
@@ -43,14 +43,14 @@ class RecipeManifest
         return $this;
     }
 
-    public function getInjectSteps(): array
+    public function getInjectTasks(): array
     {
-        return $this->injectSteps;
+        return $this->injectTasks;
     }
 
-    public function setInjectSteps(array $injectSteps): self
+    public function setInjectTasks(array $injectTasks): self
     {
-        $this->injectSteps = $injectSteps;
+        $this->injectTasks = $injectTasks;
         return $this;
     }
 }

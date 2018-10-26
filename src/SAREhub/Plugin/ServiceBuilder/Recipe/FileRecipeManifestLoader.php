@@ -12,7 +12,7 @@ class FileRecipeManifestLoader
         $data = json_decode(file_get_contents($uri), true);
         $manifest->setName($data["name"]);
         $manifest->setArchiveUri($data["archiveUri"]);
-        $manifest->setInjectSteps($data["injectSteps"]);
+        $manifest->setInjectTasks($data["injectTasks"]);
         return $manifest;
     }
 }

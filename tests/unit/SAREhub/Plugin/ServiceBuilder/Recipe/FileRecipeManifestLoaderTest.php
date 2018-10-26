@@ -29,8 +29,8 @@ class FileRecipeManifestLoaderTest extends TestCase
         $content = [
             "name" => "test_recipe",
             "archiveUri" => "https://example.com/archive.zip",
-            "injectSteps" => [
-                ["step_info"]
+            "injectTasks" => [
+                ["task_info"]
             ]
         ];
         $file = vfsStream::newFile("recipe.json")->setContent(json_encode($content));
@@ -39,6 +39,6 @@ class FileRecipeManifestLoaderTest extends TestCase
 
         $this->assertEquals($content["name"], $manifest->getName());
         $this->assertEquals($content["archiveUri"], $manifest->getArchiveUri());
-        $this->assertEquals($content["injectSteps"], $manifest->getInjectSteps());
+        $this->assertEquals($content["injectTasks"], $manifest->getInjectTasks());
     }
 }
