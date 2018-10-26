@@ -4,15 +4,26 @@
 namespace SAREhub\Plugin\ServiceBuilder\Recipe;
 
 
-class FileRecipeManifestLoader
+class FileRecipeManifestLoader implements RecipeManifestLoader
 {
-    public function load(string $uri): RecipeManifest
+    /**
+     * @var string
+     */
+    private $uri;
+
+    public function __construct(string $uri)
     {
-        $manifest = new RecipeManifest();
-        $data = json_decode(file_get_contents($uri), true);
-        $manifest->setName($data["name"]);
-        $manifest->setArchiveUri($data["archiveUri"]);
-        $manifest->setInjectTasks($data["injectTasks"]);
-        return $manifest;
+        $this->uri = $uri;
+    }
+
+    public function load(): RecipeManifest
+    {
+        return RecipeManifest::createFromJson(file_get_contents($this->uri));
+    }
+
+
+    public function getUri(): string
+    {
+        return $this->uri;
     }
 }

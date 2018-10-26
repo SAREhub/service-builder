@@ -4,7 +4,7 @@
 namespace SAREhub\Plugin\ServiceBuilder\Recipe;
 
 
-class RecipeManifest
+class RecipeManifest implements \JsonSerializable
 {
     /**
      * @var string
@@ -20,6 +20,19 @@ class RecipeManifest
      * @var array
      */
     private $injectTasks;
+
+    public static function createFromJson(string $json): self
+    {
+        return self::createFromArray(json_decode($json, true));
+    }
+
+    public static function createFromArray(array $data): self
+    {
+        return (new self())
+            ->setName($data["name"])
+            ->setArchiveUri($data["archiveUri"])
+            ->setInjectTasks($data["injectTasks"]);
+    }
 
     public function getName(): string
     {
@@ -52,5 +65,14 @@ class RecipeManifest
     {
         $this->injectTasks = $injectTasks;
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "name" => $this->getName(),
+            "archiveUri" => $this->getArchiveUri(),
+            "injectTasks" => $this->getInjectTasks()
+        ];
     }
 }

@@ -5,7 +5,8 @@ namespace SAREhub\Plugin\ServiceBuilder\Command;
 use Composer\Command\BaseCommand;
 use FilesystemIterator;
 use Josantonius\File\File;
-use SAREhub\Plugin\ServiceBuilder\Recipe\FileRecipeManifestLoader;
+use SAREhub\Plugin\ServiceBuilder\Recipe\RecipeManifest;
+use SAREhub\Plugin\ServiceBuilder\Recipe\RecipeManifestLoaderFactory;
 use SAREhub\Plugin\ServiceBuilder\Util\ArchiveDownloader;
 use SAREhub\Plugin\ServiceBuilder\Util\Task\CopyFiles\CopyFilesTaskFactory;
 use SAREhub\Plugin\ServiceBuilder\Util\Task\TaskParser;
@@ -29,33 +30,50 @@ class InjectCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $consoleOutput = new SymfonyStyle($input, $output);
+        $consoleOutput =  new SymfonyStyle($input, $output);
         $consoleOutput->title("Service Builder");
 
-        $consoleOutput->writeln("Loading recipe manifest...");
-        $manifestLoader = new FileRecipeManifestLoader();
-        $manifest = $manifestLoader->load($input->getArgument(self::ARG_RECIPE_MANIFEST_URI) . "?" . time());
+        $manifest = $this->loadManifest($input, $consoleOutput);
 
-        $consoleOutput->writeln("Creating recipe archive tmp dir...");
-        $tmpRecipesDir = getcwd() . "/".self::TMP_RECIPES_DIR;
-        $recipeTmpDir = $tmpRecipesDir ."/". $manifest->getName();
-        @mkdir($recipeTmpDir, 0777, true);
+        $tmpRecipesDir = getcwd() . "/" . self::TMP_RECIPES_DIR;
+        $extractedRecipeArchiveDir = $this->downloadRecipeArchive($manifest, $tmpRecipesDir, $consoleOutput);
 
-        $consoleOutput->writeln("Downloading recipe archive...");
-        $archiveDownloader = new ArchiveDownloader();
-        $archiveDownloader->download($manifest->getArchiveUri() . "?" . time(), $recipeTmpDir);
-        $files = iterator_to_array(new FilesystemIterator($recipeTmpDir, FilesystemIterator::SKIP_DOTS));
-        if (count($files) === 1) {
-            $recipeTmpDir .= "/".current($files)->getFilename();
-        }
-
-        $parser = new TaskParser();
-        $parser->addFactory("CopyFiles", new CopyFilesTaskFactory($recipeTmpDir . "", getcwd()));
-        $task = $parser->parse($manifest->getInjectTasks());
-        $task->run();
-        $consoleOutput->writeln("Executed recipe injectTasks...");
+        $this->runInjectTasks($manifest, $extractedRecipeArchiveDir, $consoleOutput);
 
         File::deleteDirRecursively($tmpRecipesDir);
         $consoleOutput->success("Recipe injected to project");
+    }
+
+    private function loadManifest(InputInterface $input, SymfonyStyle $output): RecipeManifest
+    {
+        $output->writeln("Loading recipe manifest...");
+        $manifestUri = $input->getArgument(self::ARG_RECIPE_MANIFEST_URI);
+        $manifestLoaderFactory = new RecipeManifestLoaderFactory();
+        $manifestLoader = $manifestLoaderFactory->create($manifestUri);
+        $manifest = $manifestLoader->load();
+        return $manifest;
+    }
+
+    private function downloadRecipeArchive(RecipeManifest $manifest, string $tmpRecipesDir, SymfonyStyle $output): string
+    {
+        $output->writeln("Creating recipe archive tmp dir...");
+        $recipeTmpDir = $tmpRecipesDir . "/" . $manifest->getName();
+        @mkdir($recipeTmpDir, 0777, true);
+
+        $output->writeln("Downloading recipe archive...");
+        $archiveDownloader = new ArchiveDownloader();
+        $archiveDownloader->download($manifest->getArchiveUri() . "?" . time(), $recipeTmpDir);
+
+        $files = iterator_to_array(new FilesystemIterator($recipeTmpDir, FilesystemIterator::SKIP_DOTS));
+        return $recipeTmpDir . ((count($files) === 1) ? "/" . current($files)->getFilename() : "");
+    }
+
+    private function runInjectTasks(RecipeManifest $manifest, string $extractedRecipeArchiveDir, SymfonyStyle $output): void
+    {
+        $parser = new TaskParser();
+        $parser->addFactory("CopyFiles", new CopyFilesTaskFactory($extractedRecipeArchiveDir . "", getcwd()));
+        $task = $parser->parse($manifest->getInjectTasks());
+        $task->run();
+        $output->writeln("Executed recipe injectTasks...");
     }
 }

@@ -20,7 +20,7 @@ class FileRecipeManifestLoaderTest extends TestCase
 
     protected function setUp()
     {
-        $this->loader = new FileRecipeManifestLoader();
+
         $this->vfsRoot = vfsStream::setup();
     }
 
@@ -35,7 +35,9 @@ class FileRecipeManifestLoaderTest extends TestCase
         ];
         $file = vfsStream::newFile("recipe.json")->setContent(json_encode($content));
         $this->vfsRoot->addChild($file);
-        $manifest = $this->loader->load($file->url());
+
+        $loader = new FileRecipeManifestLoader($file->url());
+        $manifest = $loader->load();
 
         $this->assertEquals($content["name"], $manifest->getName());
         $this->assertEquals($content["archiveUri"], $manifest->getArchiveUri());
