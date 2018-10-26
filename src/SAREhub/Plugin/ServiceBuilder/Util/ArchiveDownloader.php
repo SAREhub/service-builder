@@ -11,7 +11,8 @@ class ArchiveDownloader
     public function download(string $uri, $extractPath)
     {
         $zipFile = new ZipFile();
-        $zipFile->openFile($uri);
+        $content = file_get_contents($uri);
+        $zipFile->openFromString($content);
         $zipFile->extractTo($extractPath);
     }
 }
